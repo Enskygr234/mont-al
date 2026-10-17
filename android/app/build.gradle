@@ -11,8 +11,9 @@ android {
         minSdk 26
         targetSdk 34
         // GitHub Actions çalışma numarasından otomatik sürüm
-        versionCode (System.getenv("GITHUB_RUN_NUMBER") ?: "1").toInteger()
-        versionName "1.0." + (System.getenv("GITHUB_RUN_NUMBER") ?: "0")
+        def calismaNo = System.getenv("GITHUB_RUN_NUMBER") ?: "1"
+        versionCode = Integer.parseInt(calismaNo)
+        versionName = "1.0." + calismaNo
     }
 
     // Sabit debug anahtarı: her yeni APK eskisinin üzerine güncelleme olarak kurulabilsin.
