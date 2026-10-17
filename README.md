@@ -12,6 +12,12 @@ Ankara EGO otobüslerinin saatleri, sıradaki sefere kalan süre ve güzergah du
 - Güzergahtaki duraklar ve harita (OpenStreetMap)
 - Favori hatlar (tarayıcında saklanır), paylaşılabilir bağlantılar (`#/hat/442`)
 
+## Android uygulaması
+
+En son APK: [Releases](https://github.com/Enskygr234/durakta/releases/latest) sayfasından `durakta.apk` dosyasını telefondan indirip kur. `android/` klasöründe bir değişiklik olunca GitHub Actions yeni APK'yı kendisi derler.
+
+Uygulama siteyi açar, bu yüzden her gece güncellenen saatler uygulamaya da kendiliğinden gelir.
+
 ## Nasıl çalışıyor?
 
 ```
