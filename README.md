@@ -2,7 +2,7 @@
 
 Ankara EGO otobüslerinin saatleri, sıradaki sefere kalan süre ve güzergah durakları. Tek sayfa, sunucusuz, reklamsız.
 
-**Canlı site:** `https://<kullanıcı-adın>.github.io/durakta/`
+**Canlı site:** `https://enskygr234.github.io/durakta/`
 
 ## Ne yapıyor?
 
@@ -35,7 +35,7 @@ Depodaki ilk veri **örnek veridir**; ilk otomatik çalıştırmadan sonra gerç
 1. Bu depoyu GitHub'a yükle.
 2. **Settings → Pages**: *Source* olarak `Deploy from a branch`, dal `main`, klasör `/ (root)` seç.
 3. **Actions** sekmesinde *Veriyi güncelle* iş akışını aç ve **Run workflow** ile bir kez elle çalıştır (yaklaşık 10 dakika sürer).
-4. Birkaç dakika sonra site `https://<kullanıcı-adın>.github.io/durakta/` adresinde.
+4. Birkaç dakika sonra site `https://enskygr234.github.io/durakta/` adresinde.
 
 ## Bilgisayarında çalıştırmak
 
