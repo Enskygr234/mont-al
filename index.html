@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Durakta: Ankara otobüs saatleri</title>
+  <meta name="description" content="Ankara EGO otobüs hatlarının saatleri, sıradaki sefer ve duraklar. Tek sayfada, reklamsız.">
+  <meta name="theme-color" content="#13233A">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%2313233A'/%3E%3Crect x='8' y='7' width='16' height='13' rx='3' fill='%23F2B705'/%3E%3Crect x='14.5' y='20' width='3' height='7' fill='%23F2B705'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="ust">
+    <a href="#/" class="logo" aria-label="Durakta ana sayfa">
+      <span class="logo-tabela" aria-hidden="true"></span>
+      <span class="logo-yazi">Durakta</span>
+    </a>
+    <span class="sehir">Ankara</span>
+  </header>
+
+  <div id="ornek-uyari" class="uyari" hidden>
+    Bu örnek veridir. Gerçek EGO saatleri ilk otomatik güncellemeden sonra gelir.
+  </div>
+
+  <main id="uygulama" tabindex="-1"></main>
+
+  <footer class="alt">
+    <p>Saatler EGO'nun herkese açık sayfalarından her gece otomatik alınır. Resmi uygulama değildir; son durum için <a href="https://www.ego.gov.tr/hareketsaatleri" rel="noopener" target="_blank">EGO</a>'yu kontrol edin.</p>
+    <p>Durak konumları © <a href="https://www.openstreetmap.org/copyright" rel="noopener" target="_blank">OpenStreetMap</a> katkıcıları. <span id="guncelleme"></span></p>
+  </footer>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js" defer></script>
+  <script src="app.js" defer></script>
+</body>
+</html>

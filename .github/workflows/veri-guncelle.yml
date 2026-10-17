@@ -1,0 +1,40 @@
+name: Veriyi güncelle
+
+on:
+  schedule:
+    # Her gece 03:17 (Türkiye saati) = 00:17 UTC
+    - cron: "17 0 * * *"
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+concurrency:
+  group: veri-guncelle
+  cancel-in-progress: false
+
+jobs:
+  guncelle:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: EGO ve OpenStreetMap verisini çek
+        run: python scripts/veri_cek.py
+
+      - name: Değişiklik varsa kaydet
+        run: |
+          git config user.name "durakta-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/
+          if git diff --cached --quiet; then
+            echo "Değişiklik yok."
+          else
+            git commit -m "Veri güncellendi: $(date -u +%Y-%m-%d)"
+            git push
+          fi
