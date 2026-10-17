@@ -28,6 +28,11 @@ public class Uygulama extends Application {
         c.getSharedPreferences("hata", MODE_PRIVATE).edit().putString("son", metin).commit();
     }
 
+    /** Çökmeyen hataları sadece günlüğe yazar. */
+    public static void kaydetSessiz(Context c, Throwable e) {
+        android.util.Log.w("MontAl", "Arka plan kontrolü kurulamadı", e);
+    }
+
     public static String al(Context c) {
         return c.getSharedPreferences("hata", MODE_PRIVATE).getString("son", null);
     }

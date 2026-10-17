@@ -20,7 +20,12 @@ public class KontrolJob extends JobService {
             .setPeriodic(60 * 60 * 1000L, 20 * 60 * 1000L)
             .setPersisted(true)
             .build();
-        js.schedule(is);
+        try {
+            js.schedule(is);
+        } catch (RuntimeException e) {
+            // Arka plan kontrolü kurulamazsa uygulama yine de açılsın
+            Uygulama.kaydetSessiz(c, e);
+        }
     }
 
     @Override
