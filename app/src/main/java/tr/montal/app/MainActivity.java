@@ -51,13 +51,11 @@ public class MainActivity extends Activity {
     private LinearLayout icerik;
     private boolean yukleniyor;
 
+    private boolean hataEkrani;
+
     @Override
     protected void onCreate(Bundle b) {
         super.onCreate(b);
-        ayar = new Ayarlar(this);
-        Bildirim.kanallariKur(this);
-        KontrolJob.planla(this);
-
         kok = new ScrollView(this);
         kok.setFillViewport(true);
         icerik = new LinearLayout(this);
@@ -65,23 +63,79 @@ public class MainActivity extends Activity {
         icerik.setPadding(dp(20), dp(28), dp(20), dp(32));
         kok.addView(icerik);
         setContentView(kok);
-        renkUygula(RENKLER[1]);
+        kok.setBackgroundColor(RENKLER[1]);
 
-        if (Build.VERSION.SDK_INT >= 33 && !Bildirim.izinVar(this)) {
-            requestPermissions(new String[]{Manifest.permission.POST_NOTIFICATIONS}, 1);
+        // Önceki açılışta çöktüyse sebebini göster
+        String onceki = Uygulama.al(this);
+        if (onceki != null) {
+            Uygulama.temizle(this);
+            hataGoster(onceki);
+            return;
+        }
+
+        try {
+            ayar = new Ayarlar(this);
+            renkUygula(RENKLER[1]);
+            Bildirim.kanallariKur(this);
+            KontrolJob.planla(this);
+            if (Build.VERSION.SDK_INT >= 33 && !Bildirim.izinVar(this)) {
+                requestPermissions(new String[]{Manifest.permission.POST_NOTIFICATIONS}, 1);
+            }
+        } catch (Throwable e) {
+            hataGoster(e);
         }
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        String onbellek = ayar.tahmin();
-        if (onbellek != null) {
-            try { ciz(Hava.coz(onbellek)); } catch (Exception ignored) { }
-        } else {
-            bosEkran("Hava durumu yükleniyor…");
+        if (hataEkrani || ayar == null) return;
+        try {
+            String onbellek = ayar.tahmin();
+            if (onbellek != null) {
+                ciz(Hava.coz(onbellek));
+            } else {
+                bosEkran("Hava durumu yükleniyor…");
+            }
+            yenile(false);
+        } catch (Throwable e) {
+            hataGoster(e);
         }
-        yenile(false);
+    }
+
+    // ---------------------------------------------------------------- Hata ekranı
+
+    private void hataGoster(Throwable e) {
+        java.io.StringWriter sw = new java.io.StringWriter();
+        e.printStackTrace(new java.io.PrintWriter(sw));
+        hataGoster("Android " + Build.VERSION.RELEASE + " (API " + Build.VERSION.SDK_INT + "), "
+            + Build.MANUFACTURER + " " + Build.MODEL + "\n\n" + sw);
+    }
+
+    private void hataGoster(String metin) {
+        hataEkrani = true;
+        icerik.removeAllViews();
+        icerik.addView(yazi("Bir hata oldu", 28, true));
+        TextView acik = yazi("Bu ekranın görüntüsünü gönder, hemen düzeltelim.", 16, false);
+        acik.setPadding(0, dp(8), 0, dp(16));
+        icerik.addView(acik);
+        TextView kopyala = dugme("Hatayı kopyala");
+        kopyala.setOnClickListener(v -> {
+            android.content.ClipboardManager cm = getSystemService(android.content.ClipboardManager.class);
+            cm.setPrimaryClip(android.content.ClipData.newPlainText("hata", metin));
+            Toast.makeText(this, "Kopyalandı", Toast.LENGTH_SHORT).show();
+        });
+        icerik.addView(kopyala, sarmal());
+        TextView ayrinti = yazi(metin, 12, false);
+        ayrinti.setTypeface(Typeface.MONOSPACE);
+        ayrinti.setTextIsSelectable(true);
+        ayrinti.setPadding(0, dp(16), 0, 0);
+        icerik.addView(ayrinti);
+        TextView tekrar = dugme("Uygulamayı yeniden aç");
+        tekrar.setOnClickListener(v -> recreate());
+        LinearLayout.LayoutParams lp = sarmal();
+        lp.topMargin = dp(16);
+        icerik.addView(tekrar, lp);
     }
 
     // ---------------------------------------------------------------- Veri
@@ -126,6 +180,15 @@ public class MainActivity extends Activity {
     }
 
     private void ciz(Hava h) {
+        if (hataEkrani) return;
+        try {
+            cizIc(h);
+        } catch (Throwable e) {
+            hataGoster(e);
+        }
+    }
+
+    private void cizIc(Hava h) {
         long simdi = System.currentTimeMillis() / 1000;
         Tavsiye.Gunluk g = Tavsiye.gunluk(h, simdi);
         List<Tavsiye.Uyari> uyarilar = Tavsiye.uyarilar(h, simdi);
