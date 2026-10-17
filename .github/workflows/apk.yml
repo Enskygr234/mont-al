@@ -28,7 +28,14 @@ jobs:
           gradle-version: "8.9"
 
       - name: APK derle
-        run: gradle -p android assembleDebug --no-daemon
+        run: |
+          set -o pipefail
+          if ! gradle -p android assembleDebug --no-daemon --stacktrace 2>&1 | tee gradle.log; then
+            # Hata özetini görünür bir uyarı olarak yaz (Actions sayfasının üstünde çıkar)
+            ozet=$(grep -E -A15 "What went wrong|error:|e: |FAILURE" gradle.log | head -60 | sed ':a;N;$!ba;s/%/%25/g;s/\r//g;s/\n/%0A/g')
+            echo "::error title=Gradle hatası::${ozet}"
+            exit 1
+          fi
 
       - name: APK'yı adlandır
         run: cp android/app/build/outputs/apk/debug/app-debug.apk durakta.apk
