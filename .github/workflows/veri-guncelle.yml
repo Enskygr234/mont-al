@@ -25,7 +25,19 @@ jobs:
           python-version: "3.12"
 
       - name: EGO ve OpenStreetMap verisini çek
-        run: python scripts/veri_cek.py
+        run: |
+          set -o pipefail
+          if ! python -u scripts/veri_cek.py 2>&1 | tee veri.log; then
+            ozet=$(tail -40 veri.log | sed ':a;N;$!ba;s/%/%25/g;s/\r//g;s/\n/%0A/g')
+            echo "::error title=Veri çekilemedi::${ozet}"
+            # Bağlantı teşhisi: EGO sitesi GitHub sunucularından erişilebilir mi?
+            for u in https://www.ego.gov.tr/ https://www.ego.gov.tr/hareketsaatleri; do
+              sonuc=$(curl -sS -m 20 -o /dev/null -w "%{http_code} %{time_total}s" "$u" 2>&1 || true)
+              echo "::warning title=Bağlantı testi::$u -> $sonuc"
+            done
+            exit 1
+          fi
+          echo "::notice title=Veri güncellendi::$(tail -1 veri.log)"
 
       - name: Değişiklik varsa kaydet
         run: |
