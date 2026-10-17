@@ -4,7 +4,7 @@ on:
   push:
     branches: [main]
     paths:
-      - "android/**"
+      - "app/**"
       - ".github/workflows/apk.yml"
   workflow_dispatch: {}
 
@@ -30,7 +30,7 @@ jobs:
       - name: APK derle
         run: |
           set -o pipefail
-          if ! gradle -p android assembleDebug --no-daemon --stacktrace 2>&1 | tee gradle.log; then
+          if ! gradle assembleDebug --no-daemon --stacktrace 2>&1 | tee gradle.log; then
             # Hata özetini görünür bir uyarı olarak yaz (Actions sayfasının üstünde çıkar)
             ozet=$(grep -E -A15 "What went wrong|error:|e: |FAILURE" gradle.log | head -60 | sed ':a;N;$!ba;s/%/%25/g;s/\r//g;s/\n/%0A/g')
             echo "::error title=Gradle hatası::${ozet}"
@@ -38,15 +38,15 @@ jobs:
           fi
 
       - name: APK'yı adlandır
-        run: cp android/app/build/outputs/apk/debug/app-debug.apk durakta.apk
+        run: cp app/build/outputs/apk/debug/app-debug.apk mont-al.apk
 
       - name: Release olarak yayınla
         uses: softprops/action-gh-release@v2
         with:
           tag_name: apk-${{ github.run_number }}
-          name: Durakta 1.0.${{ github.run_number }}
+          name: Mont Al 1.0.${{ github.run_number }}
           make_latest: true
-          files: durakta.apk
+          files: mont-al.apk
           body: |
-            Telefondan `durakta.apk` dosyasını indirip kur.
+            Telefondan `mont-al.apk` dosyasını indirip kur.
             İlk kurulumda Android "bilinmeyen kaynaklardan yüklemeye izin ver" diye sorar, izin ver.

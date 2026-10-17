@@ -1,7 +1,5 @@
-__pycache__/
-*.pyc
+.gradle/
+build/
+app/build/
+local.properties
 .DS_Store
-android/.gradle/
-android/build/
-android/app/build/
-android/local.properties

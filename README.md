@@ -1,65 +1,29 @@
-# Durakta
+# Mont Al
 
-Ankara EGO otobüslerinin saatleri, sıradaki sefere kalan süre ve güzergah durakları. Tek sayfa, sunucusuz, reklamsız.
+Havaya bakıp ne giyeceğini söyleyen Android uygulaması. Her sabah "Mont al.", "Şemsiye al." gibi tek cümlelik bir tavsiye bildirimi atar; kar, fırtına, don, kuvvetli yağış, sert rüzgar ya da aşırı sıcak gelince ayrıca uyarır.
 
-**Canlı site:** `https://enskygr234.github.io/durakta/`
+## Özellikler
 
-## Ne yapıyor?
+- Büyük harflerle günün kıyafet tavsiyesi; ekranın rengi havanın sıcaklığına göre değişir
+- Şu anki hava, saat saat 24 saat, 7 günlük tahmin
+- Sabah tavsiyesi bildirimi (saatini sen seçersin, varsayılan 07:00)
+- Önümüzdeki 12 saat için uyarılar: fırtına, kar, kuvvetli yağış, rüzgar, don/buzlanma, aşırı sıcak. Aynı uyarı aynı gün bir kez gelir.
+- Şehir seçimi (varsayılan Ankara), internet yokken son tahmin
+- Hesap yok, reklam yok, konum izni istemez
 
-- Hat numarası ya da semt adıyla arama (`kizilay`, `Kızılay`, `KIZILAY` aynı sonucu verir)
-- Hat sayfasında sıradaki sefere kaç dakika kaldığı, sonraki iki sefer
-- Hafta içi / Cumartesi / Pazar tarifesi; geçen seferler soluk, sıradaki vurgulu
-- Güzergahtaki duraklar ve harita (OpenStreetMap)
-- Favori hatlar (tarayıcında saklanır), paylaşılabilir bağlantılar (`#/hat/442`)
+## Kurulum
 
-## Android uygulaması
+[Releases](../../releases/latest) sayfasından `mont-al.apk` dosyasını telefondan indirip kur. İlk açılışta bildirim izni ister, izin ver.
 
-En son APK: [Releases](https://github.com/Enskygr234/durakta/releases/latest) sayfasından `durakta.apk` dosyasını telefondan indirip kur. `android/` klasöründe bir değişiklik olunca GitHub Actions yeni APK'yı kendisi derler.
-
-Uygulama siteyi açar, bu yüzden her gece güncellenen saatler uygulamaya da kendiliğinden gelir.
+Telefonun pil tasarrufu uygulamaları uyutuyorsa bildirimler gecikebilir. Ayarlar → Uygulamalar → Mont Al → Pil → "Kısıtlanmamış" seçersen zamanında gelir.
 
 ## Nasıl çalışıyor?
 
-```
-EGO web sitesi ─┐
-                ├─> GitHub Actions (her gece) ─> data/*.json ─> GitHub Pages ─> sen
-OpenStreetMap ──┘
-```
+- Hava verisi [Open-Meteo](https://open-meteo.com)'dan gelir (ücretsiz, anahtar gerektirmez).
+- Android saatte bir uygulamayı arka planda uyandırır; tahmini yeniler, gerekiyorsa bildirim atar.
+- Tavsiye, gün içindeki en düşük hissedilen sıcaklığa göre seçilir: 0° altı kalın mont, 7°'ye kadar mont, 13°'ye kadar ceket, 19°'ye kadar ince hırka, sonrası tişört.
+- Kod `app/src/main/java/tr/montal/app/` içinde; kurallar `Tavsiye.java` dosyasında.
 
-Sunucu yok. `scripts/veri_cek.py` her gece EGO'nun herkese açık hat listesi ve hareket saatleri sayfalarını okur, durak konumlarını OpenStreetMap'ten alır ve sonuçları `data/` klasörüne yazar. Site bu JSON dosyalarını okuyup her şeyi tarayıcıda hesaplar.
+`app/` klasöründe bir değişiklik olunca GitHub Actions yeni APK'yı derleyip Releases'a koyar.
 
-| Dosya | İçerik |
-|---|---|
-| `data/hatlar.json` | Tüm hatların listesi |
-| `data/hat/<hat>.json` | Bir hattın bilgisi, saatleri ve durakları |
-| `data/duraklar.json` | `{durak_no: [enlem, boylam, ad]}` |
-
-Depodaki ilk veri **örnek veridir**; ilk otomatik çalıştırmadan sonra gerçek EGO verisiyle değişir.
-
-## Kurulum (5 dakika)
-
-1. Bu depoyu GitHub'a yükle.
-2. **Settings → Pages**: *Source* olarak `Deploy from a branch`, dal `main`, klasör `/ (root)` seç.
-3. **Actions** sekmesinde *Veriyi güncelle* iş akışını aç ve **Run workflow** ile bir kez elle çalıştır (yaklaşık 10 dakika sürer).
-4. Birkaç dakika sonra site `https://enskygr234.github.io/durakta/` adresinde.
-
-## Bilgisayarında çalıştırmak
-
-```bash
-python scripts/veri_cek.py --limit 10   # ilk 10 hattı çek (deneme)
-python -m http.server 8000              # http://localhost:8000
-```
-
-Script sadece Python standart kütüphanesini kullanır, `pip install` gerekmez.
-
-## Bilinen sınırlar
-
-- Saatler tarifedir, canlı konum değildir. Trafik, bayram ve özel günlerde gerçek saatler değişebilir. Canlı takip için EGO Cep'te uygulamasını kullan.
-- EGO'nun resmi bir açık veri API'si yok; script web sitesindeki sayfaları okur. EGO sayfa yapısını değiştirirse script güncellenmelidir.
-- Bazı durakların OpenStreetMap'te numarası olmadığı için haritada eksik görünebilirler. OSM'ye durak `ref` etiketi ekleyerek katkı verebilirsin.
-
-## Teşekkür ve yasal not
-
-Bu proje resmi değildir; Ankara Büyükşehir Belediyesi veya EGO Genel Müdürlüğü ile bağlantısı yoktur. EGO uç noktalarının belgelenmesi için [byigitt/egomac](https://github.com/byigitt/egomac) projesine teşekkürler. Durak konumları © OpenStreetMap katkıcıları (ODbL).
-
-Lisans: MIT
+Uyarılar hava tahmin modeline göre hesaplanır, resmi meteoroloji uyarısı değildir. Önemli durumlarda MGM'yi takip et.

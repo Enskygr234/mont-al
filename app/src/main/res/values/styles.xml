@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="mavi">#2E5E8C</color>
+    <style name="Tema" parent="android:Theme.Material.NoActionBar">
+        <item name="android:windowBackground">@color/mavi</item>
+        <item name="android:statusBarColor">@color/mavi</item>
+        <item name="android:navigationBarColor">@color/mavi</item>
+        <item name="android:colorAccent">#FFD54A</item>
+    </style>
+</resources>
