@@ -1,0 +1,375 @@
+<title>Mont Al</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Havaya bakıp ne giyeceğini söyleyen Android uygulaması. Her sabah tek cümle: Mont al. Şemsiye al. Tişört havası.">
+<style>
+@font-face { font-family: "MA Display"; src: url(data:font/woff;base64,{{BS}}) format("woff"); font-weight: 700; font-display: swap; }
+@font-face { font-family: "MA Text"; src: url(data:font/woff;base64,{{IR}}) format("woff"); font-weight: 400; font-display: swap; }
+@font-face { font-family: "MA Text"; src: url(data:font/woff;base64,{{IB}}) format("woff"); font-weight: 700; font-display: swap; }
+
+/* Yerleşim: koyu mavi açılış, kağıt rengi gövde; sayfanın tek gösterişli öğesi soğuktan sıcağa termometre. */
+:root {
+  /* Tek görünüm: uygulamanın kendi renkleri, temaya göre değişmez */
+  color-scheme: light;
+  --gece: #1E3A66;          /* çok soğuk bandı, açılış zemini */
+  --mont: #2E5E8C;          /* uygulamanın ana mavisi */
+  --cam: #2F6F6A;
+  --cimen: #4F7A2E;
+  --kehribar: #B86E12;
+  --kiremit: #A63A24;
+  --uyari: #FFD54A;         /* uyarı bildirimi sarısı */
+  --uyari-yazi: #3A2C00;
+  --kagit: #F0F3F7;         /* mavisi hafif kaymış açık zemin */
+  --murekkep: #14233B;
+  --soluk: #4E5D73;
+  --cizgi: #D5DDE8;
+  --beyaz: #FFFFFF;
+
+  --f-display: "MA Display", "Big Shoulders Display", "Arial Narrow", sans-serif;
+  --f-text: "MA Text", "Instrument Sans", system-ui, sans-serif;
+
+  --olcek-1: clamp(56px, 9.2vw, 112px);  /* açılış başlığı */
+  --olcek-2: clamp(40px, 6.5vw, 76px);  /* bölüm başlıkları */
+  --olcek-3: clamp(26px, 3.4vw, 36px);  /* termometre satırları */
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+
+body {
+  margin: 0;
+  background: var(--kagit);
+  color: var(--murekkep);
+  font: 400 18px/1.6 var(--f-text);
+  -webkit-font-smoothing: antialiased;
+}
+
+a { color: inherit; }
+:focus-visible { outline: 3px solid var(--uyari); outline-offset: 3px; border-radius: 6px; }
+
+.ic {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding-left: max(20px, env(safe-area-inset-left, 0px));
+  padding-right: max(20px, env(safe-area-inset-right, 0px));
+}
+
+h1, h2 { font-family: var(--f-display); font-weight: 700; text-wrap: balance; margin: 0; }
+h2 { font-size: var(--olcek-2); line-height: 0.95; letter-spacing: 0.005em; }
+p { margin: 0; }
+.giris-yazi { max-width: 34em; color: var(--soluk); margin-top: 18px; }
+
+/* ---------- Açılış ---------- */
+
+.acilis { background: var(--gece); color: var(--beyaz); }
+.acilis .ic { padding-block: 22px 0; }
+
+.ust { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+.logo { display: flex; align-items: center; gap: 12px; text-decoration: none; font: 700 30px/1 var(--f-display); letter-spacing: 0.01em; }
+.logo-ikon { width: 44px; height: 44px; border-radius: 12px; background: var(--mont); display: grid; place-items: center; }
+.ust-link { font-weight: 700; font-size: 16px; text-decoration: none; padding: 10px 16px; border: 2px solid rgba(255,255,255,.35); border-radius: 999px; }
+.ust-link:hover { border-color: var(--uyari); }
+
+.kahraman {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(0, 0.6fr);
+  gap: 48px;
+  align-items: end;
+  padding-top: 64px;
+}
+.kahraman h1 { font-size: var(--olcek-1); line-height: 0.86; letter-spacing: 0.005em; }
+.kahraman .alt-yazi { margin-top: 26px; max-width: 30em; font-size: 20px; color: #D7E2F2; }
+.kahraman .alt-yazi b { color: var(--beyaz); }
+.eylemler { margin-top: 34px; display: flex; flex-wrap: wrap; align-items: center; gap: 14px 22px; padding-bottom: 72px; }
+.indir {
+  display: inline-flex; align-items: center; gap: 12px;
+  background: var(--uyari); color: var(--uyari-yazi);
+  font: 700 19px/1 var(--f-text);
+  padding: 18px 26px; border-radius: 14px; text-decoration: none;
+}
+.indir:hover { background: #FFE07A; }
+.indir svg { width: 22px; height: 22px; }
+.not-kucuk { font-size: 15px; color: #B9C8DE; }
+
+/* ---------- Telefon maketi (uygulamanın gerçek ekranı) ---------- */
+
+.telefon-yer { align-self: end; display: flex; justify-content: center; }
+.telefon {
+  width: 100%; max-width: 330px;
+  background: #0F141C; border-radius: 44px 44px 0 0; padding: 10px 10px 0;
+}
+.ekran {
+  border-radius: 36px 36px 0 0; background: var(--mont); color: var(--beyaz);
+  padding: 22px 20px 26px; min-height: 480px;
+  font-family: var(--f-text);
+}
+.ekran .sb { display: flex; justify-content: space-between; font-size: 12px; font-weight: 700; opacity: .9; }
+.ekran .sehir { margin-top: 18px; display: flex; justify-content: space-between; font-weight: 700; font-size: 17px; }
+.ekran .gun { margin-top: 20px; font-size: 14px; opacity: .8; }
+.ekran .tav { font: 700 54px/0.9 var(--f-display); margin-top: 2px; }
+.ekran .ek { font-size: 15px; margin-top: 6px; }
+.kartcik { margin-top: 18px; border-radius: 16px; background: rgba(255,255,255,.14); padding: 14px 16px; display: flex; align-items: center; gap: 14px; }
+.kartcik .d { font: 700 64px/0.9 var(--f-display); }
+.kartcik .dr { font-weight: 700; font-size: 15px; display: flex; align-items: center; gap: 6px; }
+.kartcik .h { font-size: 12.5px; opacity: .85; margin-top: 2px; }
+.saatcik { margin-top: 10px; border-radius: 16px; background: rgba(255,255,255,.10); padding: 12px 10px; display: flex; justify-content: space-between; font-size: 12px; text-align: center; font-variant-numeric: tabular-nums; }
+.saatcik div { display: grid; gap: 6px; justify-items: center; }
+.saatcik b { font-size: 14px; }
+
+/* ---------- Termometre ---------- */
+
+.bolum { padding-block: 96px; }
+.termometre { margin-top: 44px; display: grid; gap: 6px; }
+.derece-satir {
+  display: grid;
+  grid-template-columns: 150px minmax(0, 1fr);
+  align-items: center;
+  gap: 24px;
+  color: var(--beyaz);
+  border-radius: 14px;
+  padding: 18px 26px;
+}
+.derece-satir .aralik { font: 700 22px/1.1 var(--f-text); font-variant-numeric: tabular-nums; opacity: .9; }
+.derece-satir .soz { font: 700 var(--olcek-3)/1 var(--f-display); letter-spacing: 0.01em; }
+.b0 { background: var(--gece); }
+.b1 { background: var(--mont); }
+.b2 { background: var(--cam); }
+.b3 { background: var(--cimen); }
+.b4 { background: var(--kehribar); }
+.b5 { background: var(--kiremit); }
+.termometre-not { margin-top: 18px; font-size: 15px; color: var(--soluk); max-width: 46em; }
+
+.ekler { margin-top: 56px; display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 28px 40px; }
+.ekler div { border-top: 2px solid var(--murekkep); padding-top: 14px; }
+.ekler strong { display: block; font: 700 28px/1 var(--f-display); letter-spacing: 0.01em; }
+.ekler span { display: block; margin-top: 8px; font-size: 16px; color: var(--soluk); }
+
+/* ---------- Uyarılar ---------- */
+
+.uyarilar { background: var(--mont); color: var(--beyaz); }
+.uyarilar .giris-yazi { color: #D7E2F2; }
+.uyari-izgara { margin-top: 48px; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 56px; align-items: start; }
+.esikler { list-style: none; margin: 0; padding: 0; display: grid; }
+.esikler li { display: grid; grid-template-columns: 34px minmax(0, 1fr) auto; gap: 16px; align-items: center; padding: 15px 0; border-bottom: 1px solid rgba(255,255,255,.22); }
+.esikler li:first-child { border-top: 1px solid rgba(255,255,255,.22); }
+.esikler svg { width: 28px; height: 28px; }
+.esikler .ad { font-weight: 700; }
+.esikler .esik { font-size: 15px; color: #CFDDF0; font-variant-numeric: tabular-nums; text-align: right; }
+
+.bildirim-ornek { display: grid; gap: 16px; }
+.bildirim { border-radius: 26px; padding: 18px 22px 20px; background: #F4F6FA; color: var(--murekkep); }
+.bildirim.sari { background: var(--uyari); color: var(--uyari-yazi); }
+.bildirim .bas { display: flex; align-items: center; gap: 10px; font-size: 14px; opacity: .8; }
+.bildirim .bas i { width: 26px; height: 26px; border-radius: 50%; background: var(--mont); display: grid; place-items: center; }
+.bildirim.sari .bas i { background: var(--uyari-yazi); }
+.bildirim .bas em { margin-left: auto; font-style: normal; }
+.bildirim strong { display: block; margin-top: 10px; font-size: 19px; }
+.bildirim p { margin-top: 4px; font-size: 16px; line-height: 1.45; }
+.uyari-not { margin-top: 26px; font-size: 15px; color: #CFDDF0; }
+
+/* ---------- Video ---------- */
+
+.video-izgara { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 360px); gap: 56px; align-items: center; }
+video { width: 100%; max-width: 360px; aspect-ratio: 9 / 16; border-radius: 26px; background: var(--gece); display: block; }
+
+/* ---------- Kurulum ---------- */
+
+.adimlar { margin: 44px 0 0; padding: 0; list-style: none; counter-reset: adim; display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 32px; }
+.adimlar li { counter-increment: adim; }
+.adimlar li::before { content: counter(adim); display: block; font: 700 64px/0.8 var(--f-display); color: var(--mont); margin-bottom: 14px; }
+.adimlar strong { display: block; font-size: 19px; }
+.adimlar span { display: block; margin-top: 6px; font-size: 16px; color: var(--soluk); }
+
+/* ---------- SSS ---------- */
+
+.sss { margin-top: 40px; max-width: 760px; }
+.sss details { border-bottom: 1px solid var(--cizgi); }
+.sss summary { cursor: pointer; padding: 20px 0; font-weight: 700; font-size: 19px; list-style: none; display: flex; justify-content: space-between; gap: 16px; }
+.sss summary::-webkit-details-marker { display: none; }
+.sss summary::after { content: "+"; font: 700 28px/0.8 var(--f-display); color: var(--mont); }
+.sss details[open] summary::after { content: "–"; }
+.sss details p { padding-bottom: 22px; color: var(--soluk); max-width: 40em; }
+
+/* ---------- Alt bilgi ---------- */
+
+.alt { background: var(--gece); color: #C9D6EA; }
+.alt .ic { padding-block: 56px; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 24px 48px; font-size: 15px; }
+.alt .son { font: 700 clamp(40px, 6vw, 64px)/0.9 var(--f-display); color: var(--beyaz); }
+.alt p + p { margin-top: 8px; }
+
+/* ---------- Dar ekran ---------- */
+
+@media (max-width: 860px) {
+  .kahraman { grid-template-columns: minmax(0, 1fr); padding-top: 44px; gap: 8px; }
+  .eylemler { padding-bottom: 48px; }
+  .uyari-izgara, .video-izgara { grid-template-columns: minmax(0, 1fr); gap: 36px; }
+  video { margin: 0 auto; }
+  .bolum { padding-block: 72px; }
+}
+@media (max-width: 520px) {
+  .derece-satir { grid-template-columns: minmax(0, 1fr); gap: 4px; padding: 16px 18px; }
+  .kahraman .alt-yazi { font-size: 18px; }
+  .telefon { max-width: 300px; }
+}
+</style>
+
+<header class="acilis">
+  <div class="ic">
+    <nav class="ust" aria-label="Üst menü">
+      <a class="logo" href="#">
+        <span class="logo-ikon" aria-hidden="true">{{MONT_KUCUK}}</span>
+        Mont Al
+      </a>
+      <a class="ust-link" href="https://github.com/Enskygr234/mont-al/releases/latest">APK'yı indir</a>
+    </nav>
+
+    <div class="kahraman">
+      <div>
+        <h1>Kapıdan çıkmadan ne giyeceğini bil.</h1>
+        <p class="alt-yazi">Mont Al havaya bakar ve her sabah tek cümleyle söyler: <b>Mont al. Şemsiye al. Tişört havası.</b> Kar, fırtına ya da don gelince de önceden haber verir.</p>
+        <div class="eylemler">
+          <a class="indir" href="https://github.com/Enskygr234/mont-al/releases/latest">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v12M6 11l6 6 6-6M5 20h14"/></svg>
+            Android için indir
+          </a>
+          <span class="not-kucuk">Ücretsiz, reklamsız. Hesap ve konum izni istemez.</span>
+        </div>
+      </div>
+
+      <div class="telefon-yer" aria-hidden="true">
+        <div class="telefon">
+          <div class="ekran">
+            <div class="sb"><span>07:00</span><span>87%</span></div>
+            <div class="sehir"><span>📍 Ankara ▾</span><span>↻</span></div>
+            <div class="gun">Bugün</div>
+            <div class="tav">Mont al.</div>
+            <div class="ek">Şemsiye al.</div>
+            <div class="kartcik">
+              <span class="d">6°</span>
+              <div>
+                <div class="dr">{{IKON_YAGMUR}} Yağmurlu</div>
+                <div class="h">Hissedilen 3°, rüzgar 14 km/s</div>
+              </div>
+            </div>
+            <div class="saatcik">
+              <div>Şimdi{{IKON_YAGMUR}}<b>6°</b></div>
+              <div>09{{IKON_YAGMUR}}<b>7°</b></div>
+              <div>10{{IKON_BULUT}}<b>8°</b></div>
+              <div>11{{IKON_BULUT}}<b>10°</b></div>
+              <div>12{{IKON_PARCALI}}<b>11°</b></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section class="bolum" aria-labelledby="t-baslik">
+    <div class="ic">
+      <h2 id="t-baslik">Tek cümle, hepsi bu.</h2>
+      <p class="giris-yazi">Tavsiye, dışarıda olacağın saatlerdeki en düşük hissedilen sıcaklığa göre seçilir. Sabah serin, öğlen sıcak bir günde seni üşüten an belirleyicidir.</p>
+
+      <div class="termometre" role="list">
+        <div class="derece-satir b0" role="listitem"><span class="aralik">0° ve altı</span><span class="soz">Kalın mont, bere ve eldiven.</span></div>
+        <div class="derece-satir b1" role="listitem"><span class="aralik">1° ile 7°</span><span class="soz">Mont al.</span></div>
+        <div class="derece-satir b2" role="listitem"><span class="aralik">8° ile 13°</span><span class="soz">Ceket ya da kalın hırka al.</span></div>
+        <div class="derece-satir b3" role="listitem"><span class="aralik">14° ile 19°</span><span class="soz">İnce bir hırka yeter.</span></div>
+        <div class="derece-satir b4" role="listitem"><span class="aralik">20° ile 27°</span><span class="soz">Tişört havası.</span></div>
+        <div class="derece-satir b5" role="listitem"><span class="aralik">28° ve üstü</span><span class="soz">Çok sıcak, ince giyin.</span></div>
+      </div>
+      <p class="termometre-not">Uygulamanın arka planı da bu renklere bürünür; ekrana bakar bakmaz günün nasıl olduğunu anlarsın.</p>
+
+      <div class="ekler">
+        <div><strong>Şemsiye al.</strong><span>Yağış ihtimali %50'yi geçerse ya da 1 mm'den fazla yağış bekleniyorsa.</span></div>
+        <div><strong>Kaymayan ayakkabı giy.</strong><span>Gün içinde kar yağışı varsa.</span></div>
+        <div><strong>Kat kat giyin.</strong><span>Sabahla öğlen arasında 10°'den fazla fark varsa.</span></div>
+        <div><strong>Güneş kremi sür.</strong><span>UV indeksi 7 ve üstüyse.</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="bolum uyarilar" aria-labelledby="u-baslik">
+    <div class="ic">
+      <h2 id="u-baslik">Bir şey olacaksa önceden bilirsin.</h2>
+      <p class="giris-yazi">Mont Al saatte bir önümüzdeki 12 saate bakar. Aşağıdaki durumlardan biri gelirse bildirim atar; aynı uyarı aynı gün yalnızca bir kez gelir.</p>
+
+      <div class="uyari-izgara">
+        <ul class="esikler">
+          <li>{{IKON_FIRTINA}}<span class="ad">Fırtına</span><span class="esik">gök gürültülü sağanak, dolu</span></li>
+          <li>{{IKON_KAR}}<span class="ad">Kar yağışı</span><span class="esik">saatte 1 cm ve üstü</span></li>
+          <li>{{IKON_YAGMUR}}<span class="ad">Kuvvetli yağış</span><span class="esik">saatte 5 mm ve üstü</span></li>
+          <li>{{IKON_RUZGAR}}<span class="ad">Kuvvetli rüzgar</span><span class="esik">60 km/s hamle</span></li>
+          <li>{{IKON_DON}}<span class="ad">Don ve buzlanma</span><span class="esik">-2° ve altı</span></li>
+          <li>{{IKON_GUNES}}<span class="ad">Aşırı sıcak</span><span class="esik">hissedilen 36° ve üstü</span></li>
+        </ul>
+
+        <div class="bildirim-ornek" aria-label="Örnek bildirimler">
+          <div class="bildirim">
+            <div class="bas"><i>{{MONT_MINI}}</i>Mont Al<em>07:00</em></div>
+            <strong>Mont al. Ankara 6°</strong>
+            <p>Hissedilen 3° ile 11° arası. Şemsiye al.</p>
+          </div>
+          <div class="bildirim sari">
+            <div class="bas"><i>{{MONT_MINI_SARI}}</i>Mont Al<em>14:12</em></div>
+            <strong>Kar yağışı</strong>
+            <p>Saat 15:00 civarı kar yağışı başlıyor. Mont, bot ve eldiven unutma; yollar kaygan olabilir.</p>
+          </div>
+          <p class="uyari-not">Uyarılar hava tahmin modelinden hesaplanır, resmi meteoroloji uyarısı değildir. Önemli durumlarda MGM'yi takip et.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="bolum" aria-labelledby="v-baslik">
+    <div class="ic video-izgara">
+      <div>
+        <h2 id="v-baslik">18 saniyede Mont Al.</h2>
+        <p class="giris-yazi">Sabah bildiriminden kar uyarısına kadar uygulamanın bir gününü izle. Ekranın rengi hava ısındıkça maviden kiremite döner.</p>
+      </div>
+      <video src="mont-al-tanitim.mp4" poster="kapak.jpg" controls muted playsinline loop preload="metadata" aria-label="Mont Al tanıtım videosu"></video>
+    </div>
+  </section>
+
+  <section class="bolum" aria-labelledby="k-baslik" style="padding-top: 0">
+    <div class="ic">
+      <h2 id="k-baslik">Kurulum</h2>
+      <ol class="adimlar">
+        <li><strong>APK'yı indir</strong><span>Telefonundan Releases sayfasını aç ve <b>mont-al.apk</b> dosyasına dokun.</span></li>
+        <li><strong>Yüklemeye izin ver</strong><span>Android bilinmeyen kaynaklardan yükleme izni ister; tarayıcın için bir kez izin ver.</span></li>
+        <li><strong>Bildirimlere izin ver</strong><span>İlk açılışta sorulur. Sabah tavsiyesi ve uyarılar bu izinle gelir.</span></li>
+        <li><strong>Pil kısıtlamasını kaldır</strong><span>Ayarlar, Uygulamalar, Mont Al, Pil, Kısıtlanmamış. Böylece bildirimler gecikmez.</span></li>
+      </ol>
+
+      <div class="sss">
+        <details>
+          <summary>Konumumu kullanıyor mu?</summary>
+          <p>Hayır. Varsayılan şehir Ankara; başka bir şehri ya da ilçeyi uygulamanın en üstündeki şehir adına dokunarak seçersin. Konum izni istenmez.</p>
+        </details>
+        <details>
+          <summary>Hava verisi nereden geliyor?</summary>
+          <p>Ücretsiz ve açık bir hava tahmin servisi olan Open-Meteo'dan. Uygulama saatte bir tahmini yeniler; internet yokken son tahmini gösterir.</p>
+        </details>
+        <details>
+          <summary>Sabah bildiriminin saatini değiştirebilir miyim?</summary>
+          <p>Evet. Uygulamanın altındaki Bildirimler bölümünden saati seçersin; varsayılan 07:00. İstersen sabah tavsiyesini ya da uyarıları ayrı ayrı kapatabilirsin.</p>
+        </details>
+        <details>
+          <summary>Neden Play Store'da değil?</summary>
+          <p>Mont Al küçük, kişisel bir proje. Kodu GitHub'da açık; her güncelleme orada derlenip yeni APK olarak yayınlanır. Yeni sürüm eskisinin üzerine kurulur, ayarların kaybolmaz.</p>
+        </details>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="alt">
+  <div class="ic">
+    <div class="son">Mont al.</div>
+    <div>
+      <p>Kod ve sürümler: <a href="https://github.com/Enskygr234/mont-al">github.com/Enskygr234/mont-al</a></p>
+      <p>Hava verisi: <a href="https://open-meteo.com">Open-Meteo</a> (CC BY 4.0)</p>
+    </div>
+  </div>
+</footer>

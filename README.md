@@ -2,6 +2,8 @@
 
 Havaya bakıp ne giyeceğini söyleyen Android uygulaması. Her sabah "Mont al.", "Şemsiye al." gibi tek cümlelik bir tavsiye bildirimi atar; kar, fırtına, don, kuvvetli yağış, sert rüzgar ya da aşırı sıcak gelince ayrıca uyarır.
 
+Tanıtım sitesi `docs/` klasöründe: Settings → Pages → `main` dalı, `/docs` klasörü seçilirse `https://enskygr234.github.io/mont-al/` adresinde yayınlanır. Tanıtım videosu: [docs/mont-al-tanitim.mp4](docs/mont-al-tanitim.mp4). Videonun ve sitenin kaynakları `tanitim/` klasöründe.
+
 ## Özellikler
 
 - Büyük harflerle günün kıyafet tavsiyesi; ekranın rengi havanın sıcaklığına göre değişir

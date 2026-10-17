@@ -1,0 +1,330 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<style>
+@font-face { font-family: "BigShoulders"; src: url("fonts/BigShoulders-Bold.ttf"); font-weight: 700; }
+@font-face { font-family: "Instrument"; src: url("fonts/InstrumentSans-Regular.ttf"); font-weight: 400; }
+@font-face { font-family: "Instrument"; src: url("fonts/InstrumentSans-Bold.ttf"); font-weight: 700; }
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { width: 1080px; height: 1920px; overflow: hidden; background: #1E3A66; }
+
+#sahne {
+  position: relative; width: 1080px; height: 1920px; overflow: hidden;
+  font-family: "Instrument", sans-serif; color: #fff;
+  background: #1E3A66;
+}
+
+/* Üst yazı */
+#altyazi {
+  position: absolute; left: 72px; right: 72px; top: 120px; height: 300px;
+  display: flex; align-items: flex-end;
+  font: 700 104px/0.92 "BigShoulders", sans-serif; letter-spacing: 0.005em;
+}
+#altyazi span { display: block; }
+
+/* Telefon */
+#telefon {
+  position: absolute; left: 190px; top: 470px; width: 700px; height: 1440px;
+  border-radius: 84px; background: #10141B; padding: 18px;
+}
+#ekran {
+  position: relative; width: 100%; height: 100%; border-radius: 68px; overflow: hidden;
+  background: #2E5E8C;
+}
+.durum-cubugu {
+  position: absolute; left: 0; right: 0; top: 0; height: 64px; padding: 22px 48px 0;
+  display: flex; justify-content: space-between; font: 700 24px/1 "Instrument"; z-index: 5;
+}
+.kamera { position: absolute; top: 20px; left: 50%; width: 30px; height: 30px; margin-left: -15px; border-radius: 50%; background: #10141B; z-index: 6; }
+
+/* Kilit ekranı */
+#kilit { position: absolute; inset: 0; background: #16243A; }
+#kilit .saat { position: absolute; top: 200px; width: 100%; text-align: center; font: 400 190px/1 "Instrument"; letter-spacing: -0.02em; }
+#kilit .tarih { position: absolute; top: 410px; width: 100%; text-align: center; font: 400 32px/1 "Instrument"; opacity: .8; }
+
+.bildirim {
+  position: absolute; left: 24px; right: 24px; padding: 26px 28px 28px;
+  border-radius: 40px; background: rgba(244, 246, 250, 0.96); color: #172234;
+}
+.bildirim .bas { display: flex; align-items: center; gap: 14px; font: 400 24px/1 "Instrument"; color: #4A5568; }
+.bildirim .simgecik { width: 44px; height: 44px; border-radius: 50%; background: #2E5E8C; display: grid; place-items: center; }
+.bildirim .baslik { margin-top: 18px; font: 700 34px/1.2 "Instrument"; }
+.bildirim .metin { margin-top: 8px; font: 400 29px/1.35 "Instrument"; color: #2D3748; }
+.bildirim.uyari { background: #FFD54A; color: #3A2C00; }
+.bildirim.uyari .bas, .bildirim.uyari .metin { color: #4A3A05; }
+.bildirim.uyari .simgecik { background: #3A2C00; }
+
+/* Uygulama ekranı */
+#uyg { position: absolute; inset: 0; padding: 92px 40px 40px; }
+.ust { display: flex; justify-content: space-between; align-items: center; font: 700 38px/1 "Instrument"; }
+.ust .sehir { display: flex; align-items: center; gap: 10px; }
+.gun { margin-top: 52px; font: 400 32px/1 "Instrument"; opacity: .8; }
+.tavsiye { margin-top: 10px; height: 330px; }
+.tavsiye .baslik { font: 700 112px/0.9 "BigShoulders"; }
+.tavsiye .ek { margin-top: 14px; font: 400 34px/1.3 "Instrument"; }
+.kart { border-radius: 32px; background: rgba(255,255,255,.14); padding: 28px 30px; }
+.simdi { margin-top: 10px; display: flex; align-items: center; gap: 28px; }
+.simdi .derece { font: 700 150px/0.9 "BigShoulders"; min-width: 190px; }
+.simdi .durum { font: 700 34px/1.2 "Instrument"; display: flex; align-items: center; gap: 12px; }
+.simdi .his { font: 400 27px/1.3 "Instrument"; opacity: .85; margin-top: 6px; }
+.bolum { margin: 46px 0 16px 8px; font: 700 29px/1 "Instrument"; opacity: .85; }
+.saatler { display: flex; justify-content: space-between; padding: 22px 18px; background: rgba(255,255,255,.10); }
+.saatler div { display: flex; flex-direction: column; align-items: center; gap: 14px; font: 400 26px/1 "Instrument"; }
+.saatler b { font: 700 31px/1 "Instrument"; }
+
+.gunler { padding: 10px 30px; }
+.gunler div { display: flex; align-items: center; padding: 16px 0; font: 400 30px/1 "Instrument"; }
+.gunler div span:first-child { flex: 1; }
+.gunler div b { width: 150px; text-align: right; font: 700 30px/1 "Instrument"; }
+
+/* Kar taneleri */
+.kar { position: absolute; width: 10px; height: 10px; border-radius: 50%; background: #fff; opacity: .8; }
+
+/* Kapanış */
+#kapanis { position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: center; padding: 0 96px; }
+#kapanis .ikon { width: 220px; height: 220px; border-radius: 56px; background: #1E3A66; display: grid; place-items: center; }
+#kapanis h1 { margin-top: 64px; font: 700 250px/0.85 "BigShoulders"; }
+#kapanis .slogan { margin-top: 36px; font: 400 58px/1.2 "Instrument"; }
+#kapanis .alt { margin-top: 90px; font: 700 40px/1.4 "Instrument"; opacity: .9; }
+#kapanis .link { margin-top: 10px; font: 400 36px/1.4 "Instrument"; opacity: .8; }
+</style>
+</head>
+<body>
+<div id="sahne">
+  <div id="altyazi"></div>
+
+  <div id="telefon">
+    <div id="ekran">
+      <div class="kamera"></div>
+      <div class="durum-cubugu"><span id="durumSaat">07:00</span><span>5G  ▮▮▮  87%</span></div>
+
+      <div id="uyg">
+        <div class="ust">
+          <span class="sehir"><svg width="34" height="34" viewBox="0 0 24 24" fill="#fff"><path d="M12 2a7 7 0 0 0-7 7c0 5.2 7 13 7 13s7-7.8 7-13a7 7 0 0 0-7-7zm0 9.5A2.5 2.5 0 1 1 12 6.5a2.5 2.5 0 0 1 0 5z"/></svg>Ankara&nbsp;▾</span>
+          <span style="font-size:46px">↻</span>
+        </div>
+        <div class="gun">Bugün</div>
+        <div class="tavsiye" id="tavsiye"></div>
+        <div class="kart simdi">
+          <div class="derece" id="derece">6°</div>
+          <div>
+            <div class="durum" id="durum"></div>
+            <div class="his" id="his"></div>
+          </div>
+        </div>
+        <div class="bolum">Saat saat</div>
+        <div class="kart saatler" id="saatler"></div>
+        <div class="bolum">Önümüzdeki günler</div>
+        <div class="kart gunler" id="gunler"></div>
+      </div>
+
+      <div id="karKatmani"></div>
+
+      <div id="kilit">
+        <div class="saat">07:00</div>
+        <div class="tarih">Cumartesi, 17 Ekim</div>
+      </div>
+
+      <div class="bildirim" id="bildirim1">
+        <div class="bas"><span class="simgecik">MONT</span><span>Mont Al</span><span style="margin-left:auto">şimdi</span></div>
+        <div class="baslik">Mont al. Ankara 6°</div>
+        <div class="metin">Hissedilen 3° ile 11° arası. Şemsiye al.</div>
+      </div>
+
+      <div class="bildirim uyari" id="bildirim2">
+        <div class="bas"><span class="simgecik">MONT</span><span>Mont Al</span><span style="margin-left:auto">şimdi</span></div>
+        <div class="baslik">Kar yağışı</div>
+        <div class="metin">Saat 15:00 civarı kar yağışı başlıyor. Mont, bot ve eldiven unutma; yollar kaygan olabilir.</div>
+      </div>
+    </div>
+  </div>
+
+  <div id="kapanis">
+    <div class="ikon" id="kapanisIkon"></div>
+    <h1>Mont Al</h1>
+    <div class="slogan">Kapıdan çıkmadan<br>ne giyeceğini bil.</div>
+    <div class="alt">Ücretsiz. Reklamsız. Android.</div>
+    <div class="link">github.com/Enskygr234/mont-al</div>
+  </div>
+</div>
+
+<script>
+// ---------- Simgeler ----------
+const MONT_SVG = (renk, olcek = 1) => `
+<svg width="${108 * olcek}" height="${108 * olcek}" viewBox="0 0 108 108">
+  <path d="M54,36 v-4 a4,4 0 1 1 4,-4" stroke="#fff" stroke-width="3" fill="none"/>
+  <path fill="#FFD54A" d="M54,36 L40,40 L30,52 L32,74 L38,74 L38,56 L40,78 L68,78 L70,56 L70,74 L76,74 L78,52 L68,40 Z"/>
+  <path fill="${renk}" d="M53,42 h2 v36 h-2 z"/>
+  <path fill="${renk}" d="M46,38 L54,46 L62,38 L58,37 L54,41 L50,37 Z"/>
+</svg>`;
+
+const IKON = {
+  gunes: (s) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="#FFE08A" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4.5" fill="#FFE08A"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>`,
+  bulut: (s) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24"><path fill="#fff" d="M7 18h10.5a4 4 0 0 0 .4-8A6 6 0 0 0 6.3 9.2 4.5 4.5 0 0 0 7 18z"/></svg>`,
+  parcali: (s) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24"><circle cx="8" cy="8" r="4" fill="#FFE08A"/><path fill="#fff" d="M9 20h9a3.5 3.5 0 0 0 .3-7A5 5 0 0 0 8.6 12.3 4 4 0 0 0 9 20z"/></svg>`,
+  yagmur: (s) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24"><path fill="#fff" d="M7 14h10.5a4 4 0 0 0 .4-8A6 6 0 0 0 6.3 5.2 4.5 4.5 0 0 0 7 14z"/><path stroke="#BFE0FF" stroke-width="2" stroke-linecap="round" d="M8 17l-1 3M12 17l-1 3M16 17l-1 3"/></svg>`,
+  kar: (s) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"><path d="M12 2v20M3.3 7l17.4 10M3.3 17L20.7 7M9 4l3 2 3-2M9 20l3-2 3 2"/></svg>`,
+};
+
+// ---------- Hava durumları (uygulamadaki kurallarla aynı) ----------
+const DURUMLAR = [
+  { renk: "#1E3A66", derece: "-1°", ikon: "kar", durum: "Karlı", his: "Hissedilen -6°, rüzgar 18 km/s",
+    baslik: "Kalın mont, bere ve eldiven.", ek: ["Kar yağacak, kaymayan ayakkabı giy."],
+    gunler: [["Bugün","kar","-4°  2°"],["Yarın","bulut","-2°  5°"],["Pazartesi","parcali","0°  8°"]] ,
+    saatler: [["Şimdi", "kar", "-1°"], ["09", "kar", "-1°"], ["10", "bulut", "0°"], ["11", "bulut", "1°"], ["12", "kar", "1°"]] },
+  { renk: "#2E5E8C", derece: "6°", ikon: "yagmur", durum: "Yağmurlu", his: "Hissedilen 3°, rüzgar 14 km/s",
+    baslik: "Mont al.", ek: ["Şemsiye al."],
+    gunler: [["Bugün","yagmur","3°  11°"],["Yarın","bulut","4°  12°"],["Pazartesi","parcali","5°  14°"]] ,
+    saatler: [["Şimdi", "yagmur", "6°"], ["09", "yagmur", "7°"], ["10", "bulut", "8°"], ["11", "bulut", "10°"], ["12", "parcali", "11°"]] },
+  { renk: "#4F7A2E", derece: "17°", ikon: "parcali", durum: "Parçalı bulutlu", his: "Hissedilen 16°, rüzgar 9 km/s",
+    baslik: "İnce bir hırka yeter.", ek: ["Gün içinde sıcaklık çok değişiyor,", "kat kat giyin."],
+    gunler: [["Bugün","parcali","12°  25°"],["Yarın","gunes","13°  26°"],["Pazartesi","gunes","14°  27°"]] ,
+    saatler: [["Şimdi", "parcali", "17°"], ["09", "parcali", "19°"], ["10", "gunes", "21°"], ["11", "gunes", "23°"], ["12", "gunes", "25°"]] },
+  { renk: "#A63A24", derece: "31°", ikon: "gunes", durum: "Açık", his: "Hissedilen 33°, rüzgar 6 km/s",
+    baslik: "Çok sıcak, ince giyin.", ek: ["Güneş kremi sür.", "Yanına su al."],
+    gunler: [["Bugün","gunes","22°  34°"],["Yarın","gunes","23°  35°"],["Pazartesi","parcali","21°  32°"]] ,
+    saatler: [["Şimdi", "gunes", "31°"], ["13", "gunes", "33°"], ["14", "gunes", "34°"], ["15", "gunes", "34°"], ["16", "gunes", "33°"]] },
+];
+
+// ---------- Yardımcılar ----------
+const $ = (id) => document.getElementById(id);
+const kis = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
+const ara = (t, bas, son) => kis((t - bas) / (son - bas));
+const cikis = (x) => 1 - Math.pow(1 - x, 3);
+const giris = (x) => x * x * x;
+const yay = (x) => { const c = 1.4; return 1 + (c + 1) * Math.pow(x - 1, 3) + c * Math.pow(x - 1, 2); };
+function renkKaris(a, b, x) {
+  const p = (h) => [1, 3, 5].map((i) => parseInt(h.slice(i, i + 2), 16));
+  const [r1, g1, b1] = p(a), [r2, g2, b2] = p(b);
+  const m = (u, v) => Math.round(u + (v - u) * x);
+  return `rgb(${m(r1, r2)},${m(g1, g2)},${m(b1, b2)})`;
+}
+
+// Kar taneleri (sabit tohumla, her karede aynı)
+const KAR = Array.from({ length: 46 }, (_, i) => {
+  const r = (n) => { const x = Math.sin(i * 97.13 + n * 13.7) * 43758.5453; return x - Math.floor(x); };
+  return { x: r(1) * 664, hiz: 160 + r(2) * 220, faz: r(3) * 1440, boy: 6 + r(4) * 10, salin: 10 + r(5) * 26 };
+});
+$("karKatmani").innerHTML = KAR.map((_, i) => `<div class="kar" id="kar${i}"></div>`).join("");
+$("bildirim1").querySelector(".simgecik").innerHTML = MONT_SVG("#2E5E8C", 0.45);
+$("bildirim2").querySelector(".simgecik").innerHTML = MONT_SVG("#3A2C00", 0.45);
+$("kapanisIkon").innerHTML = MONT_SVG("#2E5E8C", 2);
+
+function uygulamaDurumu(d) {
+  $("derece").textContent = d.derece;
+  $("durum").innerHTML = IKON[d.ikon](40) + d.durum;
+  $("his").textContent = d.his;
+  $("gunler").innerHTML = d.gunler.map(([g, i, c]) => `<div><span>${g}</span>${IKON[i](42)}<b>${c}</b></div>`).join("");
+  $("saatler").innerHTML = d.saatler.map(([s, i, c]) => `<div><span>${s}</span>${IKON[i](44)}<b>${c}</b></div>`).join("");
+}
+
+function tavsiyeCiz(d, ilerleme, cikisIlerleme) {
+  // Başlık aşağıdan kayarak gelir, yukarı kayarak gider
+  const y = (1 - cikis(ilerleme)) * 60 - giris(cikisIlerleme) * 60;
+  const op = cikis(ilerleme) * (1 - cikisIlerleme);
+  $("tavsiye").innerHTML =
+    `<div class="baslik" style="font-size:${d.baslik.length > 20 ? 100 : 112}px;transform:translateY(${y}px);opacity:${op}">${d.baslik}</div>` +
+    `<div class="ek" style="transform:translateY(${y * 1.3}px);opacity:${op}">${d.ek.join("<br>")}</div>`;
+}
+
+function altyazi(metin, gorunurluk, cikisO = 0) {
+  const satirlar = metin.split("|");
+  $("altyazi").innerHTML = "<div>" + satirlar.map((s, i) => {
+    const g = cikis(kis(gorunurluk * 1.6 - i * 0.35));
+    return `<span style="opacity:${g * (1 - cikisO)};transform:translateY(${(1 - g) * 40 - cikisO * 30}px)">${s}</span>`;
+  }).join("") + "</div>";
+}
+
+// ---------- Zaman çizelgesi ----------
+// 0-4.2 kilit ekranı + sabah bildirimi
+// 4.2-10.6 uygulama: renk ve tavsiye değişir
+// 10.6-14.6 kar uyarısı
+// 14.6-18 kapanış
+window.SURE = 18;
+
+window.ciz = function (t) {
+  const sahne = $("sahne");
+
+  // --- Altyazılar
+  if (t < 4.2) altyazi("Her sabah|07:00'de", ara(t, 0.1, 0.9), ara(t, 3.8, 4.2));
+  else if (t < 10.6) altyazi("havaya bakar,|ne giyeceğini|söyler.", ara(t, 4.3, 5.1), ara(t, 10.2, 10.6));
+  else if (t < 14.6) altyazi("Kar, fırtına,|don gelince|haber verir.", ara(t, 10.7, 11.5), ara(t, 14.2, 14.6));
+  else altyazi("", 0);
+
+  // --- Kilit ekranı
+  const kilitO = 1 - ara(t, 3.6, 4.3);
+  $("kilit").style.opacity = kilitO;
+  const b1 = t < 4.3 ? yay(ara(t, 0.9, 1.5)) : 1;
+  $("bildirim1").style.top = (-320 + b1 * 840) + "px";
+  $("bildirim1").style.opacity = (t < 0.9 ? 0 : 1) * kilitO;
+  $("durumSaat").textContent = t >= 10.6 ? "14:12" : (t >= 9.0 ? "13:00" : "07:00");
+
+  // --- Uygulama durumları
+  const adimlar = [4.2, 5.8, 7.4, 9.0];          // -1° -> 6° -> 17° -> 31°
+  let i = 0;
+  for (let k = 0; k < adimlar.length; k++) if (t >= adimlar[k]) i = k;
+  if (t < 4.2) i = 1;
+  if (t >= 10.6) i = 0;                          // kar uyarısı sahnesi soğuk
+  const d = DURUMLAR[i];
+
+  // Arka plan: bir önceki durumun renginden geçiş
+  let arka = d.renk;
+  if (t >= 4.2 && t < 10.6 && i > 0) {
+    const g = cikis(ara(t, adimlar[i], adimlar[i] + 0.5));
+    arka = renkKaris(DURUMLAR[i - 1].renk, d.renk, g);
+  } else if (t >= 10.6 && t < 14.6) {
+    arka = renkKaris(DURUMLAR[3].renk, DURUMLAR[0].renk, cikis(ara(t, 10.6, 11.1)));
+  } else if (t >= 4.2 && t < 5.8) {
+    arka = renkKaris(DURUMLAR[1].renk, DURUMLAR[0].renk, cikis(ara(t, 4.2, 4.5)));
+  }
+  $("ekran").style.background = arka;
+  uygulamaDurumu(d);
+
+  // Tavsiye metni animasyonu
+  if (t < 10.6) {
+    const bas = i === 0 && t < 5.8 ? 4.25 : adimlar[i];
+    const son = i < 3 ? adimlar[i + 1] : 10.6;
+    tavsiyeCiz(d, ara(t, bas + 0.05, bas + 0.55), ara(t, son - 0.3, son));
+  } else {
+    tavsiyeCiz(d, ara(t, 10.65, 11.15), ara(t, 14.3, 14.6));
+  }
+
+  // Sahnenin dış arka planı telefonla uyumlu
+  sahne.style.background = arka;
+  document.body.style.background = arka;
+
+  // --- Kar uyarısı
+  const b2 = yay(ara(t, 11.6, 12.2));
+  $("bildirim2").style.top = (-360 + b2 * 440) + "px";
+  $("bildirim2").style.opacity = t >= 11.6 && t < 14.6 ? 1 - ara(t, 14.2, 14.5) : 0;
+
+  // Kar taneleri (kar uyarısı sahnesinde)
+  const karO = t >= 10.6 && t < 14.6 ? ara(t, 10.8, 11.6) * (1 - ara(t, 14.2, 14.6)) : 0;
+  KAR.forEach((k, n) => {
+    const el = $("kar" + n);
+    const y = (k.faz + t * k.hiz) % 1500 - 60;
+    const x = k.x + Math.sin(t * 1.3 + n) * k.salin;
+    el.style.cssText = `left:${x}px;top:${y}px;width:${k.boy}px;height:${k.boy}px;opacity:${karO * 0.85}`;
+  });
+
+  // --- Telefonun girişi / çıkışı
+  const telGiris = cikis(ara(t, 0, 0.7));
+  const telCikis = giris(ara(t, 14.5, 15.1));
+  $("telefon").style.transform = `translateY(${(1 - telGiris) * 300 + telCikis * 1600}px)`;
+
+  // --- Kapanış
+  const kO = ara(t, 14.9, 15.5);
+  $("kapanis").style.opacity = kO;
+  $("kapanis").style.transform = `translateY(${(1 - cikis(kO)) * 60}px)`;
+  if (t >= 14.6) {
+    sahne.style.background = DURUMLAR[1].renk;
+    document.body.style.background = DURUMLAR[1].renk;
+  }
+};
+
+window.ciz(0);
+</script>
+</body>
+</html>
